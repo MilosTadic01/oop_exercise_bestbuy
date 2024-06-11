@@ -1,5 +1,6 @@
 ZERO_PRICE = 0
 
+
 class Product:
     def __init__(self, name, price, quantity):
         if not name:
@@ -36,7 +37,7 @@ class Product:
 
     def buy(self, quantity):
         if not self.is_active():
-            print(f"{self.name} has been deactivated")
+            print(f"{self.name} had been deactivated")
             return ZERO_PRICE
         if quantity > self.get_quantity():
             raise ValueError("Not enough in stock, try fewer")
