@@ -37,7 +37,10 @@ class Store:
         return active_products
 
     def order(self, shopping_list):
-        total_price = 0
+        grand_total = 0
         for product, quantity in shopping_list:
-            total_price += product.buy(quantity)
-        return total_price
+            try:
+                grand_total += product.buy(quantity)
+            except ValueError as e:
+                print(f"{product.name}: {e}")
+        return grand_total

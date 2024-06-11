@@ -40,7 +40,7 @@ class Product:
             print(f"{self.name} had been deactivated")
             return ZERO_PRICE
         if quantity > self.get_quantity():
-            raise ValueError("Not enough in stock, try fewer")
+            raise ValueError(f"No {quantity} in stock, try fewer.")
         self.set_quantity(self.get_quantity() - quantity)
         return quantity * self.price
 
