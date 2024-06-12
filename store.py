@@ -54,7 +54,8 @@ class Store:
             except ValueError as e:
                 print(f"{product.name}: {e}")
                 continue
-            print(f"Successfully purchased {quantity} of {product.name} "
-                  f"for ${cost}")
+            if cost > 0:
+                print(f"Successfully ordered {quantity} of {product.name} "
+                      f"for ${cost}")
             grand_total += cost
         return grand_total
