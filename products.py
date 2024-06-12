@@ -1,15 +1,18 @@
-ZERO_PRICE = 0
+ZERO_COST = 0
 
 
 class Product:
-    def __init__(self, name, price, quantity):
+    def __init__(self, name: str, price: float, quantity: int):
         if not name:
             raise ValueError("The parameter 'name' may not be empty")
-        if type(quantity) is not int:
+        if not (isinstance(price, float) or isinstance(price, int)):
+            raise TypeError("Price may only be expressed as purely numeric")
+        if not isinstance(quantity, int):
             raise TypeError("Item quantity may only be expressed in int")
-        if price < 0 or quantity < 0:
-            raise ValueError("The parameters 'price' and "
-                             "'quantity' may not have negative values")
+        if quantity < 1:
+            raise ValueError("'quantity' must be 1+ to activate in stock")
+        if price < 0:
+            raise ValueError("'price' may not have a negative value")
         self.name = name
         self.price = float(price)
         self.quantity = quantity
@@ -18,7 +21,7 @@ class Product:
     def get_quantity(self):
         return self.quantity
 
-    def set_quantity(self, quantity):
+    def set_quantity(self, quantity: int):
         self.quantity = quantity
         if self.quantity == 0:
             self.deactivate()
@@ -35,26 +38,11 @@ class Product:
     def show(self):
         return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
 
-    def buy(self, quantity):
+    def buy(self, quantity: int):
         if not self.is_active():
             print(f"{self.name} had been deactivated")
-            return ZERO_PRICE
+            return ZERO_COST
         if quantity > self.get_quantity():
             raise ValueError(f"No {quantity} in stock, try fewer.")
         self.set_quantity(self.get_quantity() - quantity)
         return quantity * self.price
-
-
-# def main():
-#     pass
-#
-#
-# if __name__ == "__main__":
-#     main()
-
-        # try:
-        #     self.price = float(price)
-        # except TypeError:
-        #     print("Price attribute takes floats")
-        # except AttributeError as e:
-        #     print(e, ": assignment failed")
