@@ -51,8 +51,8 @@ class Store:
         for product, quantity in shopping_list:
             try:
                 cost = product.buy(quantity)
-            except ValueError as e:
-                print(f"{product.name}: {e}")
+            except ValueError as err:
+                print(f"{product.name}: {err}")
                 continue
             if cost > 0:
                 print(f"Successfully ordered {quantity} of {product.name} "

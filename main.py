@@ -10,6 +10,7 @@ did ask specifically for certain try-except blocks in the OOP component.
 Thanks for reading, and thanks for looking through my code.
 """
 
+import sys
 from products import Product
 from store import Store
 
@@ -65,8 +66,8 @@ def make_an_order(best_buy: Store):
             if quantity < 1:
                 raise IndexError("Error adding product: quantity"
                                  " must be greater than zero")
-        except IndexError as e:  # I'm aware that IndexErr != ideal ErrType...
-            print(e)
+        except IndexError as err:  # I'm aware that IndexErr != ideal ErrType...
+            print(err)
             continue
         except ValueError:  # ...but I had to work around int() raising Value.
             print("Error adding product: product # and quantity "
@@ -89,7 +90,7 @@ def exit_program(best_buy: Store):
     in start(). I validate best_buy to 'void' it and satisfy the style.
     I wanted to have 1, 2, 3, 4 in the dispatcher dict."""
     if best_buy:
-        exit(0)
+        sys.exit(0)
 
 
 def start(best_buy: Store):
