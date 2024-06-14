@@ -11,7 +11,7 @@ Thanks for reading, and thanks for looking through my code.
 """
 
 import sys
-from products import Product
+import products
 from store import Store
 
 MENU_CHOICES = "1234"
@@ -112,10 +112,11 @@ def start(best_buy: Store):
 
 def main():
     """Set up initial stock of inventory, then initiate shopping session"""
-    product_list = [Product("MacBook Air M2", price=1450, quantity=100),
-                    Product("Google Pixel 7", price=500, quantity=250),
-                    Product("Bose QuietComfort Earbuds",
-                            price=250, quantity=500)
+    product_list = [products.Product("MacBook Air M2", 1450, 100),
+                    products.Product("Bose QuietComfort Earbuds", 250, 500),
+                    products.Product("Google Pixel 7", 500, 250),
+                    products.NonStockedProduct("Windows License", 125),
+                    products.LimitedProduct("Shipping", 10, 250, 1)
                     ]
     best_buy = Store(product_list)
     start(best_buy)

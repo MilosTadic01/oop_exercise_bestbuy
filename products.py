@@ -1,4 +1,5 @@
 ZERO_COST = 0
+ZERO_QTY = 0
 
 
 class Product:
@@ -11,8 +12,8 @@ class Product:
             raise TypeError("Price may only be expressed as purely numeric")
         if not isinstance(quantity, int):
             raise TypeError("Item quantity may only be expressed in int")
-        if quantity < 1:
-            raise ValueError("'quantity' must be 1+ to activate in stock")
+        if quantity < 0:
+            raise ValueError("'quantity' may not have a negative value")
         if price < 0:
             raise ValueError("'price' may not have a negative value")
         self.name = name
@@ -47,7 +48,7 @@ class Product:
 
     def show(self):
         """Contextualize and return an overview of name, price, qty."""
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+        return f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}"
 
     def buy(self, quantity: int):
         """Subtract quantity parameter from Product instance's stock qty and
@@ -59,3 +60,45 @@ class Product:
             raise ValueError(f"No {quantity} in stock, try fewer.")
         self.set_quantity(self.get_quantity() - quantity)
         return quantity * self.price
+
+
+class NonStockedProduct(Product):
+    def __init__(self, name: str, price: float):
+        """Instantiate superclass with ZERO_QTY, this gets inherited"""
+        super().__init__(name, price, ZERO_QTY)
+
+    def set_quantity(self, quantity: int):
+        """Do not let the user update the quantity"""
+        pass
+
+    def buy(self, quantity: int):
+        """Omit superclass' quantity checks and simply charge the buyer"""
+        return quantity * self.price
+
+    def show(self):
+        """Contextualize and return an overview of name, price, qty."""
+        return f"{self.name}, Price: ${self.price}, Quantity: Unlimited"
+
+
+class LimitedProduct(Product):
+    def __init__(self, name: str, price: float, quantity: int, maximum: int):
+        """Instantiate superclass, add 'maximum' attribute"""
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def buy(self, quantity: int):
+        """Only allow buying of 'self.maximum' quantity. Raise ValueError
+        if user's quantity argument is too high."""
+        if not self.is_active():
+            print(f"{self.name} currently not available.")
+            return ZERO_COST
+        if quantity > self.maximum:
+            raise ValueError(f"Too high qty, capped at {self.maximum}.")
+        self.set_quantity(self.get_quantity() - self.maximum)
+        return self.maximum * self.price
+
+    def show(self):
+        """Contextualize and return an overview of name, price, qty."""
+        return f"{self.name}, Price: ${self.price}, Limited to "\
+               f"{self.maximum} per order!"
+

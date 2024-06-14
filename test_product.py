@@ -13,7 +13,7 @@ def test_product_obj_instantiation_invalid_args():
     with pytest.raises(ValueError):
         Product('', 20, 50)
     with pytest.raises(ValueError):
-        Product('Earplugs', 20, 0)
+        Product('Earplugs', 20, -1)
     with pytest.raises(ValueError):
         Product('Earplugs', 20, -50)
     with pytest.raises(ValueError):
