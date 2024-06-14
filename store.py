@@ -29,7 +29,7 @@ class Store:
         """Return total count of all items in stock"""
         items_count = 0
         for product in self.stock:
-            items_count += product.get_quantity()
+            items_count += product.quantity
         return items_count
 
     def get_all_products(self):

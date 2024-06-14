@@ -46,33 +46,28 @@ def test_product_obj_deactivated_and_reactivated():
     product.buy(50)
     assert not product.is_active()
     product = Product('Earplugs', 20, 50)
-    product.set_quantity(0)
+    product.quantity = 0
     assert not product.is_active()
-    product.set_quantity(1)
+    product.quantity = 1
     assert product.is_active()
 
 
 def test_product_obj_purchasing_properly():
     """Test that product purchase modifies qty and returns correct value"""
-    product = Product('Earplugs', 20, 50)
+    product = Product(' Earplugs', 20, 50)
     assert product.buy(2) == 40
-    assert product.get_quantity() == 48
+    assert product.quantity == 48
     assert product.buy(48) == 960
-    assert product.get_quantity() == 0
+    assert product.quantity == 0
     assert product.buy(2) == 0
 
 
 def test_product_obj_buy_too_much():
+    """Test that qty > stock raises a ValueError"""
     product = Product('Earplugs', 20, 50)
     with pytest.raises(ValueError):
         product.buy(51)
-        # should I also that buy(-1) is bad? Or do we delegate that to Store
+        # should I test that buy(-1) is bad? Or do we delegate that to Store
 
-
-test_product_obj_instantiation_regular()
-test_product_obj_instantiation_invalid_args()
-test_product_obj_deactivated_and_reactivated()
-test_product_obj_purchasing_properly()
-test_product_obj_buy_too_much()
 
 pytest.main()

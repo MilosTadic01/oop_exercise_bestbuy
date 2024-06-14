@@ -18,27 +18,23 @@ class Product:
             raise ValueError("'price' may not have a negative value")
         self.name = name
         self.price = float(price)
-        self.quantity = quantity
+        self._quantity = quantity
         self.active = True
         self.promotion = None
 
-    def set_promotion(self, promotion):
-        self.promotion = promotion
-
-    def get_promotion(self):
-        return self.promotion
-
-    def get_quantity(self):
+    @property
+    def quantity(self):
         """Return quantity of this instance of Product"""
-        return self.quantity
+        return self._quantity
 
-    def set_quantity(self, quantity: int):
+    @quantity.setter
+    def quantity(self, quantity: int):
         """Update the quantity attribute to a new value.
         Also deactivate if quantity == 0."""
-        self.quantity = quantity
-        if self.quantity == 0:
+        self._quantity = quantity
+        if self._quantity == 0:
             self.deactivate()
-        if self.quantity and not self.is_active():
+        if self._quantity and not self.is_active():
             self.activate()
 
     def is_active(self):
@@ -53,6 +49,12 @@ class Product:
         """Set the 'active' attribute to False"""
         self.active = False
 
+    def get_promotion(self):
+        return self.promotion
+
+    def set_promotion(self, promotion):
+        self.promotion = promotion
+
     def __repr__(self):
         """Contextualize and return an overview of name, price, qty."""
         me = f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}"
@@ -65,9 +67,9 @@ class Product:
         if not self.is_active():
             print(f"{self.name} had been deactivated")
             return ZERO_COST
-        if quantity > self.get_quantity():
+        if quantity > self.quantity:
             raise ValueError(f"No {quantity} in stock, try fewer.")
-        self.set_quantity(self.get_quantity() - quantity)
+        self.quantity = self.quantity - quantity
         if self.promotion:
             # this is madness
             return self.promotion.apply_promotion(self, quantity)
@@ -79,12 +81,20 @@ class NonStockedProduct(Product):
         """Instantiate superclass with ZERO_QTY, this gets inherited"""
         super().__init__(name, price, ZERO_QTY)
 
-    def set_quantity(self, quantity: int):
-        """Do not let the user update the quantity"""
+    @property
+    def quantity(self):
+        """Return quantity of this instance of Product"""
+        return self._quantity
+
+    @quantity.setter
+    def quantity(self, quantity: int):
+        """Do not let the user update the quantity of this Product instance"""
         pass
 
     def buy(self, quantity: int):
         """Omit superclass' quantity checks and simply charge the buyer"""
+        if self.promotion:
+            return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
 
     def __repr__(self):
@@ -107,8 +117,10 @@ class LimitedProduct(Product):
             print(f"{self.name} currently not available.")
             return ZERO_COST
         if quantity > self.maximum:
-            raise ValueError(f"Too high qty, capped at {self.maximum}.")
-        self.set_quantity(self.get_quantity() - self.maximum)
+            print(f"Removed {self.name} from cart: Can't do {quantity}, only "
+                  f"{self.maximum} {self.name} per order.")
+            return ZERO_COST
+        self.quantity = self.quantity - self.maximum
         return self.maximum * self.price
 
     def __repr__(self):
