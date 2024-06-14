@@ -30,6 +30,8 @@ class Product:
         self.quantity = quantity
         if self.quantity == 0:
             self.deactivate()
+        if self.quantity and not self.is_active():
+            self.activate()
 
     def is_active(self):
         """Return the boolean value of the 'active' attribute"""
