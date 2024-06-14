@@ -69,4 +69,10 @@ def test_product_obj_buy_too_much():
         # should I also that buy(-1) is bad? Or do we delegate that to Store
 
 
+test_product_obj_instantiation_regular()
+test_product_obj_instantiation_invalid_args()
+test_product_obj_deactivated_and_reactivated()
+test_product_obj_purchasing_properly()
+test_product_obj_buy_too_much()
+
 pytest.main()

@@ -12,6 +12,7 @@ Thanks for reading, and thanks for looking through my code.
 
 import sys
 import products
+import promotions
 from store import Store
 
 MENU_CHOICES = "1234"
@@ -35,7 +36,7 @@ def show_all_active_products(best_buy: Store):
     active_products = best_buy.get_all_products()
     for i, product in enumerate(active_products):
         print(i + 1, '.', end=' ')
-        print(product.show())
+        print(product)
     print("------")
 
 
@@ -118,6 +119,15 @@ def main():
                     products.NonStockedProduct("Windows License", 125),
                     products.LimitedProduct("Shipping", 10, 250, 1)
                     ]
+    # Create promotion catalog
+    second_half_price = promotions.SecondHalfPrice("Second Half price!")
+    third_one_free = promotions.ThirdOneFree("Third One Free!")
+    thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
+
+    # Add promotions to products
+    product_list[0].set_promotion(second_half_price)
+    product_list[1].set_promotion(third_one_free)
+    product_list[3].set_promotion(thirty_percent)
     best_buy = Store(product_list)
     start(best_buy)
 

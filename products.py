@@ -20,6 +20,13 @@ class Product:
         self.price = float(price)
         self.quantity = quantity
         self.active = True
+        self.promotion = None
+
+    def set_promotion(self, promotion):
+        self.promotion = promotion
+
+    def get_promotion(self):
+        return self.promotion
 
     def get_quantity(self):
         """Return quantity of this instance of Product"""
@@ -46,9 +53,11 @@ class Product:
         """Set the 'active' attribute to False"""
         self.active = False
 
-    def show(self):
+    def __repr__(self):
         """Contextualize and return an overview of name, price, qty."""
-        return f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}"
+        me = f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}"
+        me += ', Promotion: ' + f"{self.promotion}"
+        return me
 
     def buy(self, quantity: int):
         """Subtract quantity parameter from Product instance's stock qty and
@@ -59,6 +68,9 @@ class Product:
         if quantity > self.get_quantity():
             raise ValueError(f"No {quantity} in stock, try fewer.")
         self.set_quantity(self.get_quantity() - quantity)
+        if self.promotion:
+            # this is madness
+            return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
 
 
@@ -75,9 +87,11 @@ class NonStockedProduct(Product):
         """Omit superclass' quantity checks and simply charge the buyer"""
         return quantity * self.price
 
-    def show(self):
-        """Contextualize and return an overview of name, price, qty."""
-        return f"{self.name}, Price: ${self.price}, Quantity: Unlimited"
+    def __repr__(self):
+        """Override; return an overview of name, price, 'Unlimited'."""
+        me = f"{self.name}, Price: ${self.price}, Quantity: Unlimited"
+        me += ', Promotion: ' + f"{self.promotion}"
+        return me
 
 
 class LimitedProduct(Product):
@@ -97,8 +111,9 @@ class LimitedProduct(Product):
         self.set_quantity(self.get_quantity() - self.maximum)
         return self.maximum * self.price
 
-    def show(self):
-        """Contextualize and return an overview of name, price, qty."""
-        return f"{self.name}, Price: ${self.price}, Limited to "\
-               f"{self.maximum} per order!"
-
+    def __repr__(self):
+        """Override; return an overview of name, price, max."""
+        me = f"{self.name}, Price: ${self.price}, Limited to "\
+             f"{self.maximum} per order!"
+        me += ', Promotion: ' + f"{self.promotion}"
+        return me
