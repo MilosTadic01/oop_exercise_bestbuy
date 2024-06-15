@@ -8,22 +8,26 @@ class Promotion(ABC):
     also contains at least one abstract method. The 'pass' in it mandates
     that subclasses must actually define an implementation, 'override' it."""
     def __init__(self, name):
+        """Only init the name in the Abstract parent class."""
         self._name = name
 
     def __repr__(self):
+        """This did the trick so that __repr__ of Product instances, when no
+        promotion applied, actually concatenate 'None' to the str."""
         return self._name
 
     @abstractmethod
     def apply_promotion(self, product: Product, quantity: int):
-        """Does define the taking of 'self' because those subclasses that
-        override this function will not be abstract and neither will their
-        implementations of this method."""
+        """Does specify the taking of 'self' because those subclasses which
+        override this function will not be abstract, and neither will their
+        overrides of this method."""
         pass
 
 
 class SecondHalfPrice(Promotion):
-
+    """Subclass of Abstract Class 'Promotion'. Itself non-abstract."""
     def __init__(self, name):
+        """Initialize 'self._name' by doing so in superclass."""
         super().__init__(name)
 
     def apply_promotion(self, product, quantity):
@@ -40,8 +44,9 @@ class SecondHalfPrice(Promotion):
 
 
 class ThirdOneFree(Promotion):
-
+    """Subclass of Abstract Class 'Promotion'. Itself non-abstract."""
     def __init__(self, name):
+        """Initialize 'self._name' by doing so in superclass."""
         super().__init__(name)
 
     def apply_promotion(self, product, quantity):
@@ -54,11 +59,13 @@ class ThirdOneFree(Promotion):
 
 
 class PercentDiscount(Promotion):
-
+    """Subclass of Abstract Class 'Promotion'. Itself non-abstract."""
     def __init__(self, name, percent):
-        super().__init__(name)  # ok this is insanity
+        """Initialize 'self._name' by doing so in superclass. Then set %."""
+        super().__init__(name)
         self._percent = percent
 
     def apply_promotion(self, product, quantity):
-        discounted_total = product.price * self._percent / 100 * quantity
-        return discounted_total
+        """If $100.00 headphones are 30% off, return float(70.00)"""
+        discounted = product.price * (100 - self._percent) / 100 * quantity
+        return discounted

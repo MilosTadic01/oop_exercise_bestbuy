@@ -1,22 +1,24 @@
 from products import Product
 
+STOCK_TYPE_ERROR_MSG = "Store may only stock items of <class 'Product'>"
+
 
 class Store:
     """Implementation of 'composition concept', where a class holds reference
     to one or more instances of other classes."""
     def __init__(self, items_list: list):
         if not items_list:
-            raise ValueError("Can't add unspecified Products, abort")
+            raise ValueError("Can't add non-specified Products, abort")
         for item in items_list:
             if not isinstance(item, Product):
-                raise TypeError("Store may only stock <Product> type items")
+                raise TypeError(STOCK_TYPE_ERROR_MSG + f", not {type(item)}.")
         self.stock = items_list
 
     def add_product(self, product: Product):
         """Verify that the parameter is of class Product, then include it in
         store stock (a list of all products)."""
         if not isinstance(product, Product):
-            raise TypeError("Store may only stock products")
+            raise TypeError(STOCK_TYPE_ERROR_MSG + f", not {type(product)}.")
         self.stock.append(product)
 
     def remove_product(self, product: Product):
@@ -43,14 +45,13 @@ class Store:
     def __contains__(self, item):
         """Check if obj <item> is among stocked products."""
         if not isinstance(item, Product):
-            raise TypeError(f"Stores can only contain <class 'Product'>, "
-                            f"not {type(item)}.")
+            raise TypeError(STOCK_TYPE_ERROR_MSG + f", not {type(item)}.")
         if item in self.stock:
             return True
         return False
 
     def __add__(self, other):
-        """Combine the stocks of two stores to open a new store, and remove
+        """Combine the stocks of two stores to open a new store and remove
         the products from the original stores. If match between product names
         among the two stores, only update the quantity rather than adding as
         separate instance."""
@@ -61,9 +62,9 @@ class Store:
             combined_products.append(product)
             self.remove_product(product)
         for product in other.get_all_products():
-            for i, stocked in enumerate(combined_products):
-                if product.name == stocked.name:
-                    combined_products[i].quantity += product.quantity
+            for stocked_in_new_store in combined_products:
+                if product.name == stocked_in_new_store.name:
+                    stocked_in_new_store.quantity += product.quantity
                     break
             else:
                 combined_products.append(product)
@@ -71,8 +72,9 @@ class Store:
         return Store(combined_products)
 
     def __repr__(self):
-        """Transferred the function which was originally in main to present
-        the products listing as self."""
+        """Contextualize and print the retval of self.get_all_products().
+        Transferred the function which was originally in main to present
+        the products listing when overloading __repr__."""
         me = "------\n"
         active_products = self.get_all_products()
         for i, product in enumerate(active_products):

@@ -1,3 +1,6 @@
+"""It appears that it is not possible to have multiple function calls within
+the same 'with' block, which might make sense logically, but was a surprise"""
+
 import pytest
 from products import Product
 
@@ -67,7 +70,6 @@ def test_product_obj_buy_too_much():
     product = Product('Earplugs', 20, 50)
     with pytest.raises(ValueError):
         product.buy(51)
-        # should I test that buy(-1) is bad? Or do we delegate that to Store
 
 
 pytest.main()

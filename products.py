@@ -24,12 +24,15 @@ class Product:
 
     @property
     def price(self):
-        """Return price of this instance of Product"""
+        """self._price 'getter', the property way.
+        Enables that 'obj.price' gets self._price."""
         return self._price
 
     @price.setter
     def price(self, price: (float, int)):
-        """Update the price attribute to a new value."""
+        """self._price 'setter', the property way.
+        Enables that 'obj.price = ' sets self._price, while also granting
+        the ability to perform error checks, which increases robustness."""
         if not isinstance(price, (float, int)):
             raise TypeError("Prices may only be numeric.")
         if price < 0:
@@ -38,13 +41,13 @@ class Product:
 
     @property
     def quantity(self):
-        """Return quantity of this instance of Product"""
+        """self._quantity 'getter', the property way."""
         return self._quantity
 
     @quantity.setter
     def quantity(self, quantity: int):
-        """Update the quantity attribute to a new value.
-        Also deactivate if quantity == 0."""
+        """self._quantity 'setter', the property way.
+        Also, deactivate if quantity == 0."""
         if not isinstance(quantity, int):
             raise TypeError("Item quantity may only be expressed in int")
         if quantity < 0:
@@ -69,10 +72,12 @@ class Product:
 
     @property
     def promotion(self):
+        """Promotion 'getter', the property way."""
         return self._promotion
 
     @promotion.setter
     def promotion(self, promotion):
+        """Promotion 'setter', the property way."""
         self._promotion = promotion
 
     def __repr__(self):
@@ -82,6 +87,7 @@ class Product:
         return me
 
     def __lt__(self, other):
+        """Overload '<'."""
         if not isinstance(other, Product):
             raise TypeError("Can't compare apples and oranges.")
         if self.price < other.price:
@@ -89,6 +95,7 @@ class Product:
         return False
 
     def __gt__(self, other):
+        """Overload '>'."""
         if not isinstance(other, Product):
             raise TypeError("Can't compare apples and oranges.")
         if self.price > other.price:
@@ -99,18 +106,19 @@ class Product:
         """Subtract quantity parameter from Product instance's stock qty and
         return the cost of said subtraction if all checks are passed"""
         if not self.is_active():
-            print(f"{self.name} had been deactivated")
+            print(f"{self.name} had been deactivated.")
             return ZERO_COST
         if quantity > self.quantity:
             raise ValueError(f"No {quantity} in stock, try fewer.")
-        self.quantity = self.quantity - quantity
+        self.quantity -= quantity
         if self.promotion:
-            # this is madness
+            # this is madness, OOP is wild
             return self.promotion.apply_promotion(self, quantity)
         return quantity * self.price
 
 
 class NonStockedProduct(Product):
+    """Unlimited stock count subclass (ex.: digital licenses)"""
     def __init__(self, name: str, price: float):
         """Instantiate superclass with ZERO_QTY, this gets inherited"""
         super().__init__(name, price, ZERO_QTY)
@@ -122,7 +130,7 @@ class NonStockedProduct(Product):
 
     @quantity.setter
     def quantity(self, quantity: int):
-        """Do not let the user update the quantity of this Product instance"""
+        """Prevent updating the quantity of this instance of Product"""
         pass
 
     def buy(self, quantity: int):
@@ -139,6 +147,7 @@ class NonStockedProduct(Product):
 
 
 class LimitedProduct(Product):
+    """Limited purchase count per order (ex.: shipping)"""
     def __init__(self, name: str, price: float, quantity: int, maximum: int):
         """Instantiate superclass, add 'maximum' attribute"""
         super().__init__(name, price, quantity)

@@ -1,15 +1,3 @@
-"""
-Hello dear evaluator. Before you judge my bloated error management, allow me
-to note that I've asked the school for a more in-depth session about
-differentiating between try-except blocks, if-else blocks and asserts.
-If there are any remarks on your behalf, I welcome them and I ask that
-you please exemplify what you mean. That would be great help to me.
-Judging by the DEMO, error handling isn't the focus of this exercise,
-but it's still something that I'm trying to get better at and the assignment
-did ask specifically for certain try-except blocks in the OOP component.
-Thanks for reading, and thanks for looking through my code.
-"""
-
 import sys
 import products
 import promotions
@@ -27,11 +15,7 @@ MENU = """
 
 
 def show_all_active_products(best_buy: Store):
-    """This could've been an instance method, but it was not among project
-    requirements. There is a vague possibility that the project implicitly
-    wanted us to define functions like this, otherwise I'm not sure how
-    I'd get the Demo result for menu options (other than bloating the start()
-    function by a lot)."""
+    """Delegated the printout formatting to __repr__ of Store class."""
     print(best_buy)
 
 
@@ -125,16 +109,22 @@ def main():
     product_list[3].promotion = thirty_percent
     best_buy = Store(product_list)
 
+    start(best_buy)
+
+# Replace 'start(best_buy)' with this to test overload of __add__ in Store cls
+
+
+"""
     # setup initial stock of inventory
     mac = products.Product("MacBook Air M2", 1450, 100)
     bose = products.Product("Bose QuietComfort Earbuds", 250, 500)
     airpods = products.LimitedProduct("AirPods II", 500, 250, 1)
-
+    
     technomania = Store([mac, bose])
-    print(mac)  # Should print `MacBook Air M2, Price: $1450 Quantity:100`
-    print(mac > bose)  # Should print True
-    print(mac in technomania)  # Should print True
-    print(airpods in technomania)  # Should print False
+    print(mac)
+    print(mac > bose)
+    print(mac in technomania)
+    print(airpods in technomania)
 
     print("\nbest_buy")
     print(best_buy)
@@ -147,9 +137,9 @@ def main():
     saturn.add_product(airpods)
     print("saturn")
     print(saturn)
-
-    # start(best_buy)
-
+    print("best_buy")
+    print(best_buy)
+"""
 
 if __name__ == "__main__":
     main()
