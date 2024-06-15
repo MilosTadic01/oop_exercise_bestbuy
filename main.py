@@ -46,10 +46,10 @@ def make_an_order(best_buy: Store):
             if quantity < 1:
                 raise IndexError("Error adding product: quantity"
                                  " must be greater than zero")
-        except IndexError as err:  # I'm aware that IndexErr != ideal ErrType...
+        except IndexError as err:  # I'm aware that IndErr != ideal ErrType...
             print(err)
             continue
-        except ValueError:  # ...but I had to work around int() raising Value.
+        except ValueError:  # ...but I had to work around int() raising ValEr.
             print("Error adding product: product # and quantity "
                   "must be integers")
             continue
@@ -102,44 +102,13 @@ def main():
     second_half_price = promotions.SecondHalfPrice("Second Half price!")
     third_one_free = promotions.ThirdOneFree("Third One Free!")
     thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
-
     # Add promotions to products
     product_list[0].promotion = second_half_price
     product_list[1].promotion = third_one_free
     product_list[3].promotion = thirty_percent
     best_buy = Store(product_list)
-
     start(best_buy)
 
-# Replace 'start(best_buy)' with this to test overload of __add__ in Store cls
-
-
-"""
-    # setup initial stock of inventory
-    mac = products.Product("MacBook Air M2", 1450, 100)
-    bose = products.Product("Bose QuietComfort Earbuds", 250, 500)
-    airpods = products.LimitedProduct("AirPods II", 500, 250, 1)
-    
-    technomania = Store([mac, bose])
-    print(mac)
-    print(mac > bose)
-    print(mac in technomania)
-    print(airpods in technomania)
-
-    print("\nbest_buy")
-    print(best_buy)
-    print("technomania")
-    print(technomania)
-
-    saturn = best_buy + technomania
-    print("saturn")
-    print(saturn)
-    saturn.add_product(airpods)
-    print("saturn")
-    print(saturn)
-    print("best_buy")
-    print(best_buy)
-"""
 
 if __name__ == "__main__":
     main()
