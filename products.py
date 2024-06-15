@@ -17,10 +17,24 @@ class Product:
         if price < 0:
             raise ValueError("'price' may not have a negative value")
         self.name = name
-        self.price = float(price)
+        self._price = float(price)
         self._quantity = quantity
         self.active = True
         self._promotion = None
+
+    @property
+    def price(self):
+        """Return price of this instance of Product"""
+        return self._price
+
+    @price.setter
+    def price(self, price: (float, int)):
+        """Update the price attribute to a new value."""
+        if not isinstance(price, (float, int)):
+            raise TypeError("Prices may only be numeric.")
+        if price < 0:
+            raise ValueError("'price' may not have a negative value")
+        self._price = price
 
     @property
     def quantity(self):
@@ -31,6 +45,10 @@ class Product:
     def quantity(self, quantity: int):
         """Update the quantity attribute to a new value.
         Also deactivate if quantity == 0."""
+        if not isinstance(quantity, int):
+            raise TypeError("Item quantity may only be expressed in int")
+        if quantity < 0:
+            raise ValueError("'quantity' may not have a negative value")
         self._quantity = quantity
         if self._quantity == 0:
             self.deactivate()
@@ -62,6 +80,20 @@ class Product:
         me = f"{self.name}, Price: ${self.price}, Quantity: {self.quantity}"
         me += ', Promotion: ' + f"{self.promotion}"
         return me
+
+    def __lt__(self, other):
+        if not isinstance(other, Product):
+            raise TypeError("Can't compare apples and oranges.")
+        if self.price < other.price:
+            return True
+        return False
+
+    def __gt__(self, other):
+        if not isinstance(other, Product):
+            raise TypeError("Can't compare apples and oranges.")
+        if self.price > other.price:
+            return True
+        return False
 
     def buy(self, quantity: int):
         """Subtract quantity parameter from Product instance's stock qty and

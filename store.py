@@ -6,10 +6,10 @@ class Store:
     to one or more instances of other classes."""
     def __init__(self, items_list: list):
         if not items_list:
-            raise ValueError("Can't open store with no items")
+            raise ValueError("Can't add unspecified Products, abort")
         for item in items_list:
             if not isinstance(item, Product):
-                raise TypeError("Store may only stock products")
+                raise TypeError("Store may only stock <Product> type items")
         self.stock = items_list
 
     def add_product(self, product: Product):
@@ -39,6 +39,46 @@ class Store:
             if product.is_active():
                 active_products.append(product)
         return active_products
+
+    def __contains__(self, item):
+        """Check if obj <item> is among stocked products."""
+        if not isinstance(item, Product):
+            raise TypeError(f"Stores can only contain <class 'Product'>, "
+                            f"not {type(item)}.")
+        if item in self.stock:
+            return True
+        return False
+
+    def __add__(self, other):
+        """Combine the stocks of two stores to open a new store, and remove
+        the products from the original stores. If match between product names
+        among the two stores, only update the quantity rather than adding as
+        separate instance."""
+        if not isinstance(other, Store):
+            raise TypeError("May only concat <class 'Store'> with own type.")
+        combined_products = []
+        for product in self.get_all_products():
+            combined_products.append(product)
+            self.remove_product(product)
+        for product in other.get_all_products():
+            for i, stocked in enumerate(combined_products):
+                if product.name == stocked.name:
+                    combined_products[i].quantity += product.quantity
+                    break
+            else:
+                combined_products.append(product)
+            other.remove_product(product)
+        return Store(combined_products)
+
+    def __repr__(self):
+        """Transferred the function which was originally in main to present
+        the products listing as self."""
+        me = "------\n"
+        active_products = self.get_all_products()
+        for i, product in enumerate(active_products):
+            me += f"{i + 1}. {product}\n"
+        me += "------\n"
+        return me
 
     @staticmethod
     def order(shopping_list: list):

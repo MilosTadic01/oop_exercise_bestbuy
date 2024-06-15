@@ -32,12 +32,7 @@ def show_all_active_products(best_buy: Store):
     wanted us to define functions like this, otherwise I'm not sure how
     I'd get the Demo result for menu options (other than bloating the start()
     function by a lot)."""
-    print("------")
-    active_products = best_buy.get_all_products()
-    for i, product in enumerate(active_products):
-        print(i + 1, '.', end=' ')
-        print(product)
-    print("------")
+    print(best_buy)
 
 
 def show_total_quantity(best_buy: Store):
@@ -129,7 +124,31 @@ def main():
     product_list[1].promotion = third_one_free
     product_list[3].promotion = thirty_percent
     best_buy = Store(product_list)
-    start(best_buy)
+
+    # setup initial stock of inventory
+    mac = products.Product("MacBook Air M2", 1450, 100)
+    bose = products.Product("Bose QuietComfort Earbuds", 250, 500)
+    airpods = products.LimitedProduct("AirPods II", 500, 250, 1)
+
+    technomania = Store([mac, bose])
+    print(mac)  # Should print `MacBook Air M2, Price: $1450 Quantity:100`
+    print(mac > bose)  # Should print True
+    print(mac in technomania)  # Should print True
+    print(airpods in technomania)  # Should print False
+
+    print("\nbest_buy")
+    print(best_buy)
+    print("technomania")
+    print(technomania)
+
+    saturn = best_buy + technomania
+    print("saturn")
+    print(saturn)
+    saturn.add_product(airpods)
+    print("saturn")
+    print(saturn)
+
+    # start(best_buy)
 
 
 if __name__ == "__main__":
