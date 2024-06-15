@@ -20,7 +20,7 @@ class Product:
         self.price = float(price)
         self._quantity = quantity
         self.active = True
-        self.promotion = None
+        self._promotion = None
 
     @property
     def quantity(self):
@@ -49,11 +49,13 @@ class Product:
         """Set the 'active' attribute to False"""
         self.active = False
 
-    def get_promotion(self):
-        return self.promotion
+    @property
+    def promotion(self):
+        return self._promotion
 
-    def set_promotion(self, promotion):
-        self.promotion = promotion
+    @promotion.setter
+    def promotion(self, promotion):
+        self._promotion = promotion
 
     def __repr__(self):
         """Contextualize and return an overview of name, price, qty."""
